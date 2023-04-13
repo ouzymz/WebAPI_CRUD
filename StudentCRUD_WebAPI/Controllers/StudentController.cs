@@ -11,7 +11,13 @@ namespace StudentCRUD_WebAPI.Controllers
 {
     public class StudentController : ControllerBase
     {
-        StudentManager _studentService = new StudentManager(new EFStudentDal());
+
+
+        IStudentService _studentService;
+        public StudentController(IStudentService studentService)
+        {
+            _studentService = studentService;
+        }
 
         [HttpGet]
         [Route("GetAllStudents")]

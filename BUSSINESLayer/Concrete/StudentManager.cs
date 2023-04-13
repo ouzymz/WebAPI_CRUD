@@ -1,6 +1,7 @@
 ﻿using BUSSINESLayer.Abstract;
 using DATALayer.Abstract;
 using ENTITYLayer.Concrete;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,12 @@ namespace BUSSINESLayer.Concrete
     public class StudentManager : IStudentService
     {
         IStundentDal _studentDal;
+        private ILogger _logger;
 
-        public StudentManager(IStundentDal studentDal)
+        public StudentManager(IStundentDal studentDal, ILoggerFactory logger)
         {
             _studentDal = studentDal;
+            _logger = logger.CreateLogger("AplicationLog"); 
         }
 
         public List<Student> TGetAll()

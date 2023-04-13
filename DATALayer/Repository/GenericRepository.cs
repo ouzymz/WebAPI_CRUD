@@ -1,6 +1,8 @@
 ﻿using DATALayer.Abstract;
 using DATALayer.Concrete;
+using DATALayer.EF;
 using ENTITYLayer.Concrete;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,39 +13,43 @@ namespace DATALayer.Repository
 {
     public class GenericRepository<T> : IGenericDal<T> where T : class, new()
     {
-        
+
+        public StundentContext _context;
+        private readonly ILogger _logger;
+        public GenericRepository(StundentContext context, ILoggerFactory logger)
+        {
+            _context= context;
+            _logger = logger.CreateLogger("AplicationLog");
+        }
         public void Create(T item)
         {
-            using var _dbcontext = new StundentContext();    
             
-            _dbcontext.Add(item);
+            _context.Add(item);
 
-            _dbcontext.SaveChanges();
+            _context.SaveChanges();
         }
 
         public void Delete(int Id)
         {
-            using var _dbcontext = new StundentContext();
 
-            _dbcontext.Remove(_dbcontext.Set<T>().Find(Id));
+            _context.Remove(_context.Set<T>().Find(Id));
 
-            _dbcontext.SaveChanges();
+            _context.SaveChanges();
         }
 
         public List<T> GetAll()
         {
-            using var _dbcontext = new StundentContext();
 
-            List<T> list = _dbcontext.Set<T>().ToList();
+            List<T> list = _context.Set<T>().ToList();
 
             return list;
         }
 
         public T GetProductById(int Id)
         {
-            using var _dbcontext = new StundentContext();
+           
 
-            var getProduct = _dbcontext.Set<T>().Find(Id);
+            var getProduct = _context.Set<T>().Find(Id);
 
             return getProduct;
         }
@@ -52,7 +58,7 @@ namespace DATALayer.Repository
         {
             using var _dbcontext = new StundentContext();
 
-            _dbcontext.Set<T>().Update(item);
+            _context.Set<T>().Update(item);
 
             _dbcontext.SaveChanges();
 
